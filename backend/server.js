@@ -19,10 +19,11 @@ console.log("ML_SERVICE_URL =", ML_SERVICE_URL);
 app.get(["/api/aqi", "/api/predict-aqi"], async (req, res) => {
   const lat = req.query.lat || "40.7128";
   const lon = req.query.lon || "-74.0060";
+  const forceRefresh = req.query.refresh === "true";
   console.log("Received /api/aqi request with query:", req.query);
   const cacheKey = `${lat},${lon}`;
 
-  if (cache.has(cacheKey)) {
+  if (cache.has(cacheKey) && !forceRefresh) {
     return res.json(cache.get(cacheKey));
   }
 
